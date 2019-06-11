@@ -1,25 +1,65 @@
 var todoList = {
-    todos: ['item 1', 'item 2', 'item 3'],
+    todos: [],
+
+    init: function() {
+        for (var i = 0; i < 3; i++)
+            this.todos.push({  
+                todoText: "Item " + i,
+                completed: false
+            });
+        this.displayTodos();        
+    },
+
     displayTodos: function() {
-        console.log('My Todos', this.todos);
+        if (this.todos.length === 0) {
+          console.log("Your todo list is empty:)");            
+        } else {
+          console.log('My Todos:');
+          for (var i = 0; i < this.todos.length; i++){
+            if (this.todos[i].completed === true) {
+                console.log("(x)" + this.todos[i].todoText);
+            } else {
+                console.log("()" + this.todos[i].todoText);
+            }
+          } 
+        }   
     },
-    addTodo: function(todo) {
-        this.todos.push(todo);
+
+    addTodo: function(todoText) {
+        this.todos.push({
+            todoText: todoText, 
+            completed: false
+        });
         this.displayTodos();
     },
-    changeTodo: function(position, newValue) {
-        this.todos[position] = newValue;
+
+    changeTodo: function(position, todoText) {
+        this.todos[position].todoText = todoText;
         this.displayTodos();
     },
+
     deleteTodo: function(position) {
         this.todos.splice(position, 1);
         this.displayTodos();
     },
-    // create new method called replaceTodoList
-    //e.g. replace existing with an entirely
-    //param(list). Default start pos is 0, delCount
-    //derive it as a variable(size of list)
-    //break list param up into items, then pass into
-    //method
-    
+
+    toggleCompleted: function(position) {
+        var todo = this.todos[position];
+        todo.completed = !todo.completed;
+        this.displayTodos();
+    },
+
+    toggleAll: function() {
+        var totalTodos = this.todos.length;
+        var completedTodos = 0;
+        for (var i = 0; i < totalTodos; i++) {
+            if (this.todos[i].completed === true) {
+                completedTodos++;
+            } 
+        }
+        //If everything is true, make everything false
+        if (completedTodos === totalTodos) {
+            
+        }
+    }
 };
