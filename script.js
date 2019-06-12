@@ -57,9 +57,27 @@ var todoList = {
                 completedTodos++;
             } 
         }
-        //If everything is true, make everything false
-        if (completedTodos === totalTodos) {
-            
+        //If everything is true, make everything false vice versa
+        if (completedTodos === totalTodos || completedTodos === 0) {
+            for (var i = 0; i < totalTodos; i++) {
+                this.toggleCompleted(i);
+            }
+        } else {
+            console.log("All todos not toggled");
         }
     }
 };
+
+var handlers = {
+    initTodos: function() {
+        todoList.init();
+    },
+
+    displayTodos: function() {
+        todoList.displayTodos();
+    },
+
+    toggleAll: function() {
+        todoList.toggleAll();
+    },
+}
