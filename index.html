@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Ugly TodoList</title>
+        <title>TodoList</title>
         <link href="styles.css" type="text/css" rel="stylesheet">
     </head>
     <body>
@@ -9,9 +9,36 @@
             <h1 class="page-header">TODOLIST</h1>
         </header>
         <section>
-            <button class="btn" onclick="handlers.initTodos()" type="button">Initialise</button>
-            <button class="btn" onclick="handlers.displayTodos()" type="button">Display Todos</button>
-            <button class="btn" onclick="handlers.toggleAll()" type="button">Toggle All</button>
+            <div>
+                <button class="btn grey" onclick="handlers.initTodos()" type="button">Initialise</button> 
+                <button class="btn blue" onclick="handlers.toggleAll()" type="button">Toggle All</button>
+            </div>
+            <div>
+                <label for="addTodoTextInput">Todo</label>
+                <input class="input" id="addTodoTextInput" type="text">
+                <button class="btn green" onclick="handlers.addTodo()" type="button">Add Todo</button>
+            </div>
+            <div>
+                <label for="editTodoPositionInput">Position</label>
+                <input id="editTodoPositionInput" type="number">
+                <label for="editTodoTextInput">Todo</label>
+                <input id="editTodoTextInput" type="text">
+                <button class="btn grey" onclick="handlers.editTodo()">Edit Todo</button>
+            </div>
+            <div>
+                <label for="deleteTodoPositionInput">Todo</label>
+                <input id="deleteTodoPositionInput" type="number">
+                <button class="btn red" onclick="handlers.deleteTodo()">Delete Todo</button>
+            </div>
+            <div>
+                <label for="toggleCompletedPositionInput">Todo</label>
+                <input id="toggleCompletedPositionInput" type="number">
+                <button class="btn grey" onclick="handlers.toggleCompleted()">Toggle Complete</button>
+            </div>
+            <div>
+                <ul class="todosList">
+                </ul>
+            </div>
         </section>
         <script src="script.js"></script>
     </body>
