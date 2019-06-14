@@ -58,19 +58,25 @@ var todoList = {
     toggleAll: function() {
         var totalTodos = this.todos.length;
         var completedTodos = 0;
-        for (var i = 0; i < totalTodos; i++) {
-            if (this.todos[i].completed === true) {
+        
+        // for (var i = 0; i < totalTodos; i++) {
+        //     if (this.todos[i].completed === true) {
+        //         completedTodos++;
+        //     } 
+        // }
+
+        this.todos.forEach(function(hello) {
+            if (hello.completed === true) {
                 completedTodos++;
-            } 
-        }
+            }
+        });
+
         //If everything is true, make everything false vice versa
         if (completedTodos === totalTodos || completedTodos === 0) {
-            for (var i = 0; i < totalTodos; i++) {
-                this.toggleCompleted(i);
-            }
-        } else {
-            console.log("All todos not toggled");
-        }
+            this.todos.forEach(function(todo, position) {
+                this.toggleCompleted(position);
+            }, this)
+        } 
     }
 };
 
@@ -97,10 +103,8 @@ var handlers = {
         view.displayTodos();
     },
 
-    deleteTodo: function() {
-        var deleteTodoPositionInput = document.getElementById('deleteTodoPositionInput');
-        todoList.deleteTodo(deleteTodoPositionInput.value);
-        deleteTodoPositionInput.value = '';
+    deleteTodo: function(position) {
+        todoList.deleteTodo(position);
         view.displayTodos();
     },
 
@@ -133,9 +137,8 @@ var view = {
     displayTodos: function() {
         var todosUl = document.querySelector(".todosList");
         todosUl.innerHTML = '';        
-        for (var i = 0; i < todoList.todos.length; i ++) {
+        todoList.todos.forEach(function(todo, position) {
             var todoLi = document.createElement("li");
-            var todo = todoList.todos[i];
             var todoTextwithCompletion = '';
             
             if (todo.completed === true) {
@@ -144,17 +147,31 @@ var view = {
                 todoTextwithCompletion = '( ) ' + todo.todoText;
             }
 
-            todoLi.id = i;
+            todoLi.id = position;
             todoLi.textContent = todoTextwithCompletion;
             todoLi.appendChild(this.createDeleteBtn());
             todosUl.appendChild(todoLi);
-        }
+        }, this)
     },
     createDeleteBtn: function(id){
         var deleteBtn = document.createElement('button');
         deleteBtn.textContent = 'Delete';
         deleteBtn.className = 'btn red deleteBtn';
         return deleteBtn;
+    },
+    setUpEventListeners: function() {
+        var todosUl = document.querySelector('ul');
+
+        todosUl.addEventListener('click', function(event) {
+
+            //Get clicked element
+            var elementClicked = event.target;
+
+            //Check if elementClicked is a delete button
+            if (elementClicked.classList.contains('deleteBtn') === true){
+            handlers.deleteTodo(parseInt(elementClicked.parentNode.id));
+        }
+    });
     }
 }
 
@@ -168,5 +185,4 @@ var inputValidation = {
     }
 }
 
-// Aim to make the error messages of the console log display as a global warning in the page.
-// Using message
+view.setUpEventListeners();
