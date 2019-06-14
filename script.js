@@ -18,52 +18,36 @@ var todoList = {
     },
 
     addTodo: function(todoText) {
-        this.todos.push({
+        if (todoText !== "") {
+            this.todos.push({
+                todoText: todoText, 
             todoText: todoText, 
-            completed: false
-        });
+                todoText: todoText, 
+                completed: false
+            });
+        }
     },
 
     editTodo: function(position, todoText) {
-        if (position === "") {
-            messages.message('position');
-        } else if (position > (this.todos.length - 1)) {
-            messages.message("edit todo"); 
-        } else {
-            this.todos[position].todoText = todoText;
-        }
+        if (position !== "" && !(position > (this.todos.length - 1)) && todoText !== "") {  
+            this.todos[position].todoText = todoText;    
+        }  
     },
 
     deleteTodo: function(position) {
-        if (position === "") {
-            messages.message('position');
-        } else if (position > (this.todos.length - 1)) {
-            messages.message("delete todo");
-        } else {
             this.todos.splice(position, 1);
-        }
     },
 
     toggleCompleted: function(position) {
-        if (position === "") {
-            messages.message('position');
-        } else if (position > (this.todos.length - 1)) {
-            messages.message("toggleCompleted todo");    
-        } else {
+        if (position !== "" && !(position > (this.todos.length - 1))) {  
             var todo = this.todos[position];
-            todo.completed = !todo.completed;
+            todo.completed = !todo.completed;   
         }
     },
 
     toggleAll: function() {
         var totalTodos = this.todos.length;
         var completedTodos = 0;
-        
-        // for (var i = 0; i < totalTodos; i++) {
-        //     if (this.todos[i].completed === true) {
-        //         completedTodos++;
-        //     } 
-        // }
 
         this.todos.forEach(function(hello) {
             if (hello.completed === true) {
@@ -88,22 +72,22 @@ var handlers = {
 
     addTodo: function() {
         var addTodoTextInput = document.getElementById('addTodoTextInput');
-        inputValidation.validate(addTodoTextInput);
         todoList.addTodo(addTodoTextInput.value);
+        view.validateText(addTodoTextInput);
         addTodoTextInput.value = '';
         view.displayTodos();
     },
 
     editTodo: function() {
-        var editTodoPositionInput = document.getElementById('editTodoPositionInput');
         var editTodoTextInput = document.getElementById('editTodoTextInput');
+        var editTodoPositionInput = document.getElementById('editTodoPositionInput');
         todoList.editTodo(editTodoPositionInput.value, editTodoTextInput.value);
-        editTodoPositionInput.value = '';
-        editTodoTextInput.value = '';
+        view.validateTextandPosition(editTodoTextInput, editTodoPositionInput);
         view.displayTodos();
     },
 
     deleteTodo: function(position) {
+        // view.validatePosition(position);
         todoList.deleteTodo(position);
         view.displayTodos();
     },
@@ -111,7 +95,7 @@ var handlers = {
     toggleCompleted: function() {
         var toggleCompletedPositionInput = document.getElementById('toggleCompletedPositionInput');
         todoList.toggleCompleted(toggleCompletedPositionInput.value);
-        toggleCompletedPositionInput.value = '';
+        view.validatePosition(toggleCompletedPositionInput);
         view.displayTodos();
     },
 
@@ -153,12 +137,14 @@ var view = {
             todosUl.appendChild(todoLi);
         }, this)
     },
+
     createDeleteBtn: function(id){
         var deleteBtn = document.createElement('button');
         deleteBtn.textContent = 'Delete';
         deleteBtn.className = 'btn red deleteBtn';
         return deleteBtn;
     },
+
     setUpEventListeners: function() {
         var todosUl = document.querySelector('ul');
 
@@ -172,17 +158,70 @@ var view = {
             handlers.deleteTodo(parseInt(elementClicked.parentNode.id));
         }
     });
-    }
-}
+    },
 
-var inputValidation = {    
-    validate: function(input) {
-        if (input.value === '') {
-            input.className = input.className + " error";
+    //Clear inputs if successful
+    validateText: function(textField) {
+        if (textField.value === "") {
+            if (!textField.classList.contains("error")) {
+                textField.className = textField.className + " error";
+            }       
         } else {
-            input.className = input.className.replace(" error", "");
+            textField.className = textField.className.replace(" error", "");
+            toggleCompletedPositionInput.value = '';
+        }
+    },
+
+    validatePosition: function(positionField) {
+        if (positionField.value === "") {
+            if (!positionField.classList.contains("error")) {
+                positionField.className = positionField.className + " error";
+            }  
+        } else if (positionField.value > (todoList.todos.length - 1)) {
+            if (!positionField.classList.contains("error")) {
+                positionField.className = positionField.className + " error";
+            }
+        } else {
+            positionField.className = positionField.className.replace(" error", "");
+            toggleCompletedPositionInput.value = '';
+        }
+    },
+
+    validateTextandPosition: function(textField, positionField) {
+        // if both inputs are wrong, hold field values
+        if(textField.value === "") {
+            console.log("yes");
+        }
+        if (textField.value === "" && ((positionField.value === "") || positionField.value > (todoList.todos.length - 1))) {
+            if (!textField.classList.contains("error")) {
+                textField.className = textField.className + " error";
+            }
+            if (!positionField.classList.contains("error")) {
+                positionField.className = positionField.className + " error";
+            }
+        // text value is empty, hold field values and remove position error
+        } else if (textField.value === "" && !((positionField.value === "") || positionField.value > (todoList.todos.length - 1))) {
+            if (!textField.classList.contains("error")) {
+                textField.className = textField.className + " error";
+            }
+            positionField.className = positionField.className.replace(" error", "");
+        // position value is wrong, hold field values and remove text error
+        } else if (textField.value !== "" && ((positionField.value === "") || positionField.value > (todoList.todos.length - 1))) {
+            if (!positionField.classList.contains("error")) {
+                positionField.className = positionField.className + " error";
+            }
+            textField.className = textField.className.replace(" error", "");
+        // both values are correct, clear both fields and remove error class
+        } else {
+            textField.className = textField.className.replace(" error", "");
+            positionField.className = positionField.className.replace(" error", "");
+            textField.value = '';
+            positionField.value = '';
         }
     }
 }
+
+//Better to put the validatetext and validatepositon in view 
+//In the todoList methods, change the if else statements to just one big ifelse. If input is valid, run. Else do nothing.
 
 view.setUpEventListeners();
