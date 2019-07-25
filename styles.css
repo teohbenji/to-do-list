@@ -38,27 +38,27 @@ label {
     width: 120px;
     height: 40px;
     margin: 20px;
-    color: white;
+    color: black;
     font-weight: bold;
     font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
     box-shadow: 0px 0em 0px 0px rgba(34, 36, 38, 0.15) inset
 }
 
 .blue {
-    background-color: #2185D0;
+    background-color: #ffffff;
 }
 
 .green {
-    background-color: #21BA45;
+    background-color: #FFFFFF;
 }
 
 .grey {
-    background-color: E0E1E2;
-    color: rgba(0, 0, 0, 0.6);
+    background-color: #ffffff;
+    /* color: rgba(0, 0, 0, 0.6); */
 }
 
 .red {
-    background-color: #DB2828;
+    background-color: #FFFFFF;
 }
 
 .error {
